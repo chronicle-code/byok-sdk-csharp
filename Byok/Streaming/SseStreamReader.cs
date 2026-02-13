@@ -53,15 +53,8 @@ namespace Byok.Streaming
                     {
                         var first = choices[0];
 
-                        // Check finish_reason
-                        if (first.TryGetProperty("finish_reason", out var finishElem) &&
-                            finishElem.ValueKind == JsonValueKind.String)
-                        {
-                            yield return new ChatStreamChunk { Content = "", Done = true };
-                            yield break;
-                        }
-
-                        // Extract delta content
+                        // Extract delta content first (before checking finish_reason,
+                        // because the final chunk may contain both)
                         if (first.TryGetProperty("delta", out var delta) &&
                             delta.TryGetProperty("content", out var contentElem) &&
                             contentElem.ValueKind == JsonValueKind.String)
@@ -71,6 +64,14 @@ namespace Byok.Streaming
                             {
                                 yield return new ChatStreamChunk { Content = content, Done = false };
                             }
+                        }
+
+                        // Then check finish_reason
+                        if (first.TryGetProperty("finish_reason", out var finishElem) &&
+                            finishElem.ValueKind == JsonValueKind.String)
+                        {
+                            yield return new ChatStreamChunk { Content = "", Done = true };
+                            yield break;
                         }
                     }
                 }
