@@ -41,5 +41,27 @@ namespace Byok
             return JsonSerializer.Deserialize<WalletResponse>(json)
                    ?? throw new ByokException("Empty response body", (int)response.StatusCode);
         }
+
+        /// <summary>
+        /// Create a Stripe Checkout session for wallet top-up.
+        /// Returns a URL to open in a browser/webview for the player to complete payment.
+        /// POST /api/v1/wallet/checkout
+        /// </summary>
+        public async Task<CheckoutResponse> CheckoutAsync(CheckoutRequest request, string? userId = null, CancellationToken cancellationToken = default)
+        {
+            var body = JsonSerializer.Serialize(request);
+            using var msg = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/api/v1/wallet/checkout");
+            msg.Headers.Add("Authorization", $"Bearer {_apiKey}");
+            msg.Headers.Add("X-Byok-User", userId ?? _defaultUserId ?? "");
+            msg.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _http.SendAsync(msg, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+                await ErrorParser.ThrowForStatusAsync(response).ConfigureAwait(false);
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return JsonSerializer.Deserialize<CheckoutResponse>(json)
+                   ?? throw new ByokException("Empty response body", (int)response.StatusCode);
+        }
     }
 }
