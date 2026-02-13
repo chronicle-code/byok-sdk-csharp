@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Byok</RootNamespace>
+    <PackageId>Byok</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>BYOK, Inc.</Authors>
+    <Description>BYOK SDK for .NET / Unity — AI-powered NPC dialogue, player registration, events, state, and wallet.</Description>
+    <PackageTags>byok;ai;npc;unity;gamedev</PackageTags>
+    <RepositoryUrl>https://github.com/byok-gg/byok-sdk-csharp</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>
